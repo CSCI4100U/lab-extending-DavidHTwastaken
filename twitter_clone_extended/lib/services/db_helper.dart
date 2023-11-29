@@ -19,10 +19,10 @@ class DatabaseHelper {
       userLongName TEXT NOT NULL,
       timeStamp TEXT NOT NULL,
       description TEXT NOT NULL,
-      imageURL TEXT NOT NULL,
       numComments INT NOT NULL,
       numRetweets INT NOT NULL,
-      numLikes INT NOT NULL
+      numLikes INT NOT NULL,
+      imageURL TEXT
     )
     ''';
     db = await openDatabase(join(await getDatabasesPath(), 'tweets.db'),
@@ -32,14 +32,12 @@ class DatabaseHelper {
   Future<List<Tweet>> getTweets() async {
     await _init();
     return await db
-        .query(tableName)
+        .query(tableName,orderBy: 'timeStamp')
         .then((list) => list.map((e) => Tweet.fromMap(e)).toList());
   }
 
-  Future<void> insertTweet(Tweet tweet) async{
+  Future<void> insertTweet(Tweet tweet) async {
     await _init();
     await db.insert(tableName, tweet.toMap());
   }
-
-
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CreateTweet extends StatefulWidget {
+  const CreateTweet({super.key});
+
   @override
   State<CreateTweet> createState() => _CreateTweetState();
 }
@@ -24,52 +26,80 @@ class _CreateTweetState extends State<CreateTweet> {
       body: Form(
           key: _formKey,
           child: Column(children: [
-            TextFormField(
-                controller: userLongNameController,
-                validator: (name) {
-                  if (name == null || name.isEmpty) {
-                    return "Must include value for long name";
-                  }
-                  return null;
-                }),
-            TextFormField(
-                controller: userShortNameController,
-                validator: (name) {
-                  if (name == null || name.isEmpty) {
-                    return "Must include value for short name";
-                  }
-                  return null;
-                }),
-            TextFormField(
-                controller: descriptionController,
-                validator: (text) {
-                  if (text == null || text.isEmpty) {
-                    return "Must include a body for the tweet";
-                  }
-                  return null;
-                }),
-            TextFormField(
-              controller: imageUrlController,
-              validator: (url) {
-                if (url != null) {
-                  try {
-                    if (Uri.parse(url).isAbsolute) {
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: TextFormField(
+                    controller: userLongNameController,
+                    validator: (name) {
+                      if (name == null || name.isEmpty) {
+                        return "Must include value for long name";
+                      }
                       return null;
+                    },
+                    decoration: const InputDecoration(
+                        labelText: "Long Name *",
+                        border: OutlineInputBorder()
+                    ))),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: TextFormField(
+                    controller: userShortNameController,
+                    validator: (name) {
+                      if (name == null || name.isEmpty) {
+                        return "Must include value for short name";
+                      }
+                      return null;
+                    },decoration: const InputDecoration(
+                    labelText: "Short Name *",
+                    border: OutlineInputBorder()
+                ))),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: TextFormField(
+                    controller: descriptionController,
+                    validator: (text) {
+                      if (text == null || text.isEmpty) {
+                        return "Must include a body for the tweet";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                        labelText: "Description *",
+                        border: OutlineInputBorder()
+                    )
+                ),
+
+            ),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                child: TextFormField(
+                  controller: imageUrlController,
+                  validator: (url) {
+                    if (url != null) {
+                      try {
+                        if (Uri.parse(url).isAbsolute) {
+                          return null;
+                        }
+                      } on FormatException catch (_, e) {
+                        return "Invalid URL";
+                      }
                     }
-                  } on FormatException catch (_, e) {
-                    return "Invalid URL";
-                  }
-                }
-                return null;
-              },
-              decoration:
-                  const InputDecoration(labelText: "Image URL (Optional)"),
-            )
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                      labelText: "Image URL (Optional)",
+                      border: OutlineInputBorder()
+                  ),
+                ))
           ])),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
-              Navigator.of(context).pop({
+              Navigator.of(context).pop(<String,dynamic>{
                 userLongName: userLongNameController.text.trim(),
                 userShortName: userShortNameController.text.trim(),
                 description: descriptionController.text.trim(),

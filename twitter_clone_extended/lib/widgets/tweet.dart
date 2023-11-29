@@ -44,7 +44,7 @@ class TweetWidget extends StatelessWidget {
                         style: const TextStyle(color: Colors.grey),
                       ),
                       Text(
-                        convertPostTime(tweet.timeStamp),
+                        convertPostTime(tweet.timeStamp, DateTime.now()),
                         style: const TextStyle(color: Colors.grey),
                       ),
                       const Icon(Icons.arrow_drop_down)

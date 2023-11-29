@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('test', () {
-    DateTime postTime = DateTime(2023, 11, 28, 7);
-    convertPostTime(postTime);
+    DateTime start = DateTime(2023,11,28,7,6,12);
+    DateTime end = DateTime(2023, 11, 28, 7,6,13);
+    String diff = convertPostTime(start,end);
+    expect(diff, '1s');
   });
 }

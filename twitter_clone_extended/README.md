@@ -2,7 +2,7 @@
 
 Extended version of lab 3-4 for Mobile Devices 4100U.
 
-## Extending
+## Extension Requirements
 If you wish to extend this lab, you will need to add features including interaction for elements in the application.
 
 - (3 marks) Add a button to the AppBar that takes users to a new page where they can create a new tweet. This will require them to specify their two names, the text of the tweet, and an optional link to an image. New tweets are created with 0 comments, retweets, and likes, and are timestamped at the time of their creation.

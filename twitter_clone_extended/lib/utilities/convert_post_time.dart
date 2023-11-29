@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-String convertPostTime(DateTime postTime){
-  Duration diff = postTime.difference(DateTime.now());
+String convertPostTime(DateTime postTime, DateTime current){
+  Duration diff = current.difference(postTime);
   if(diff.inDays >= 365){
     return DateFormat('MMM d, yyyy').format(postTime);
   }
