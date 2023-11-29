@@ -3,7 +3,7 @@ class Tweet {
   String userLongName;
   DateTime timeStamp;
   String description;
-  String imageURL;
+  String? imageURL;
   int numComments;
   int numRetweets;
   int numLikes;
@@ -14,7 +14,7 @@ class Tweet {
     required this.userLongName,
     required this.timeStamp,
     required this.description,
-    required this.imageURL,
+    this.imageURL,
     required this.numComments,
     required this.numRetweets,
     required this.numLikes,

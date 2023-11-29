@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_extended/utilities/convert_post_time.dart';
+import 'package:twitter_clone_extended/models/tweet.dart';
 
 class TweetWidget extends StatelessWidget {
-  final String userShortName;
-  final String userLongName;
-  final DateTime timeStamp;
-  final String description;
-  final String imageURL;
-  final int numComments;
-  final int numRetweets;
-  final int numLikes;
+  final Tweet tweet;
 
   const TweetWidget({
     super.key,
-    required this.userShortName,
-    required this.userLongName,
-    required this.timeStamp,
-    required this.description,
-    required this.imageURL,
-    required this.numComments,
-    required this.numRetweets,
-    required this.numLikes,
+    required this.tweet
   });
 
   @override
@@ -49,41 +36,39 @@ class TweetWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        userLongName,
+                        tweet.userLongName,
                         style: const TextStyle(color: Colors.black),
                       ),
                       Text(
-                        '@$userShortName',
+                        '@${tweet.userShortName}',
                         style: const TextStyle(color: Colors.grey),
                       ),
                       Text(
-                        convertPostTime(timeStamp),
+                        convertPostTime(tweet.timeStamp),
                         style: const TextStyle(color: Colors.grey),
                       ),
                       const Icon(Icons.arrow_drop_down)
                     ],
                   ),
-                  // User Long Name
-
                   // Tweet Description
-                  Text(description),
+                  Text(tweet.description),
                   // Tweet Image
-                  Image.asset(imageURL, scale: 0.5),
+                  tweet.imageURL != null ? Image.network(tweet.imageURL!, scale: 0.5) : Container(),
                   // Tweet Statistics (Comments, Retweets, Likes)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(children: [
                         const Icon(Icons.comment),
-                        Text('$numComments')
+                        Text('${tweet.numComments}')
                       ]),
                       Row(children: [
                         const Icon(Icons.repeat_sharp),
-                        Text('$numRetweets')
+                        Text('${tweet.numRetweets}')
                       ]),
                       Row(children: [
                         const Icon(Icons.favorite),
-                        Text('$numLikes')
+                        Text('${tweet.numLikes}')
                       ]),
                       const Icon(Icons.bookmark)
                     ],
