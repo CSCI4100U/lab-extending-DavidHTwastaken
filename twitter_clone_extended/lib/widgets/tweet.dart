@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_extended/utilities/convert_post_time.dart';
 import 'package:twitter_clone_extended/models/tweet.dart';
+import 'package:twitter_clone_extended/services/tweets_provider.dart';
 
 class TweetWidget extends StatelessWidget {
   final Tweet tweet;
@@ -47,7 +48,7 @@ class TweetWidget extends StatelessWidget {
                         convertPostTime(tweet.timeStamp, DateTime.now()),
                         style: const TextStyle(color: Colors.grey),
                       ),
-                      const Icon(Icons.arrow_drop_down)
+                      const Icon(Icons.expand_more)
                     ],
                   ),
                   // Tweet Description
@@ -67,7 +68,7 @@ class TweetWidget extends StatelessWidget {
                         Text('${tweet.numRetweets}')
                       ]),
                       Row(children: [
-                        const Icon(Icons.favorite),
+                        Icon(tweet.isLiked ? Icons.favorite : Icons.favorite_border),
                         Text('${tweet.numLikes}')
                       ]),
                       const Icon(Icons.bookmark)
