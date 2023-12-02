@@ -1,3 +1,5 @@
+// The model assumes there is only one user
+// as user identification has not been implemented
 class Tweet {
   int id;
   String userShortName;
@@ -10,6 +12,7 @@ class Tweet {
   int numLikes;
   bool isLiked;
   bool isRetweeted;
+  bool isFavourited;
 
   // Constructor
   Tweet({
@@ -23,6 +26,7 @@ class Tweet {
     required this.numLikes,
     required this.isLiked,
     required this.isRetweeted,
+    required this.isFavourited,
     this.imageURL,
   });
 
@@ -39,7 +43,8 @@ class Tweet {
       'numRetweets': numRetweets,
       'numLikes': numLikes,
       'isLiked': isLiked,
-      'isRetweeted': isRetweeted
+      'isRetweeted': isRetweeted,
+      'isFavorited': isFavourited
     };
   }
 
@@ -55,5 +60,6 @@ class Tweet {
         numRetweets = map['numRetweets'],
         numLikes = map['numLikes'],
         isLiked = map['isLiked'],
-        isRetweeted = map['isRetweeted'];
+        isRetweeted = map['isRetweeted'],
+        isFavourited = map['isFavourited'];
 }
