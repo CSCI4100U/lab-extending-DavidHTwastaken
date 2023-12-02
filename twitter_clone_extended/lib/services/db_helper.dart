@@ -74,6 +74,6 @@ class DatabaseHelper {
   }
 
   Future<void> updateTweet(int id, Map<String, dynamic> values) async {
-    await db.update(tableName, values, where: 'id = $id');
+    await db.update(tableName, convertMapBoolsToInt(values), where: 'id = $id');
   }
 }

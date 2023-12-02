@@ -67,11 +67,20 @@ class FeedState extends State<Feed> {
                   // Tweet Description
                   Text(tweet.description),
                   // Tweet Image
-                  ((){
-                    if(tweet.imageURL != null){
-                        return Image.network(tweet.imageURL!, scale: 0.5,errorBuilder: (context,exception,stacktrace){
-                          return Center(child: Container(alignment: Alignment.center,height: 160,color: Colors.grey,child: const Text("Invalid image URL")));
-                        },);
+                  (() {
+                    if (tweet.imageURL != null) {
+                      return Image.network(
+                        tweet.imageURL!,
+                        scale: 0.5,
+                        errorBuilder: (context, exception, stacktrace) {
+                          return Center(
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: 160,
+                                  color: Colors.grey,
+                                  child: const Text("Invalid image URL")));
+                        },
+                      );
                     }
                     return Container();
                   })(),
@@ -80,7 +89,13 @@ class FeedState extends State<Feed> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(children: [
-                        const Icon(Icons.comment),
+                        MenuAnchor(menuChildren: <MenuItemButton>[MenuItemButton(onPressed: () async{
+                          Map<String,dynamic> newTweet = await Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const CreateTweet()));
+
+                        },child: const Text('Reply'))]),
+                        IconButton(icon: const Icon(Icons.chat_bubble_outline),onPressed: (){
+
+                        },),
                         Text('${tweet.numComments}')
                       ]),
                       Row(children: [
@@ -88,7 +103,8 @@ class FeedState extends State<Feed> {
                           icon: Icon(tweet.isRetweeted
                               ? Icons.repeat
                               : Icons.repeat_sharp),
-                          onPressed: () => Provider.of<TweetsProvider>(context,listen:false)
+                          onPressed: () => Provider.of<TweetsProvider>(context,
+                                  listen: false)
                               .retweet(index),
                         ),
                         Text('${tweet.numRetweets}')
@@ -98,12 +114,20 @@ class FeedState extends State<Feed> {
                             icon: Icon(tweet.isLiked
                                 ? Icons.favorite
                                 : Icons.favorite_border),
-                            onPressed: () =>
-                                Provider.of<TweetsProvider>(context, listen:false)
-                                    .like(index)),
+                            onPressed: () => Provider.of<TweetsProvider>(
+                                    context,
+                                    listen: false)
+                                .like(index)),
                         Text('${tweet.numLikes}')
                       ]),
-                      const Icon(Icons.bookmark)
+                      IconButton(
+                        icon: Icon(tweet.isFavourited
+                            ? Icons.bookmark
+                            : Icons.bookmark_border),
+                        onPressed: () =>
+                            Provider.of<TweetsProvider>(context, listen: false)
+                                .favourite(index),
+                      )
                     ],
                   ),
                 ],

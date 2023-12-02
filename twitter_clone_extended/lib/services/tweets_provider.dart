@@ -34,6 +34,7 @@ class TweetsProvider extends ChangeNotifier {
         _tweets[index].numRetweets = numRetweets;
         _tweets[index].isLiked = isRetweeted;
       });
+      notifyListeners();
   }
 
   void like(int index) {
@@ -47,9 +48,17 @@ class TweetsProvider extends ChangeNotifier {
       _tweets[index].numLikes = numLikes;
       _tweets[index].isLiked = isLiked;
     });
+    notifyListeners();
   }
 
   void favourite(int index) {
-
+    Tweet tweet = _tweets[index];
+    bool isFavourited = !tweet.isFavourited;
+    db.updateTweet(tweet.id, <String, dynamic>{
+      'isFavourited': isFavourited,
+    }).then((val) {
+      _tweets[index].isFavourited = isFavourited;
+    });
+    notifyListeners();
   }
 }
