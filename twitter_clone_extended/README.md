@@ -2,6 +2,11 @@
 
 Extended version of lab 3-4 for Mobile Devices 4100U.
 
+The extra feature I have chosed to implement is a search function.
+Entering search terms in the bar will filter the list
+of tweets. Tweets within the search suggestions
+can be still be interacted with.
+
 ## Extension Requirements
 If you wish to extend this lab, you will need to add features including interaction for elements in the application.
 
@@ -19,6 +24,6 @@ If you wish to extend this lab, you will need to add features including interact
 
 - (done) Access a local SQLite database to generate the initial tweets that appear when starting the app. Any changes you make using the other features should be saved to the database.
 
-- (2 mark) Add one more feature of your choice other than those listed here. Mention this feature explicitly in your README.md.
+- (done) Add one more feature of your choice other than those listed here. Mention this feature explicitly in your README.md.
 
     - The feature you add should not be trivial (e.g. display the total number of tweets). As a baseline, it should be at least as complex as adding a new page that lets the user search through and display all the existing tweets containing some search term (where users should still be able to interact with those tweets as normal). 
