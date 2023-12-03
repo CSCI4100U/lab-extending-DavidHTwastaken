@@ -3,7 +3,7 @@ import 'package:twitter_clone_extended/models/tweet.dart';
 import 'package:twitter_clone_extended/services/db_helper.dart';
 
 class TweetsProvider extends ChangeNotifier {
-  Map<int?, List<Tweet>> _tweets = {};
+  Map<int?, List<Tweet>> _tweets = {null: []};
   Map<int?, List<Tweet>> get tweets => {..._tweets};
   DatabaseHelper db = DatabaseHelper();
 
@@ -13,6 +13,7 @@ class TweetsProvider extends ChangeNotifier {
 
   Future<void> refresh() async {
     _tweets = await db.getTweets();
+    sortTweets();
     notifyListeners();
   }
 
@@ -69,13 +70,17 @@ class TweetsProvider extends ChangeNotifier {
       'isFavourited': isFavourited,
     }).then((val) {
       _tweets[null]![index].isFavourited = isFavourited;
-      _tweets[null]!.sort((b,a){
-        if((a.isFavourited && b.isFavourited) || !(a.isFavourited || b.isFavourited)){
-          return a.timeStamp.compareTo(b.timeStamp);
-        }
-        return a.isFavourited ? 1 : -1;
-      });
+      sortTweets();
       notifyListeners();
+    });
+  }
+
+  void sortTweets(){
+    _tweets[null]!.sort((b,a){
+      if((a.isFavourited && b.isFavourited) || !(a.isFavourited || b.isFavourited)){
+        return a.timeStamp.compareTo(b.timeStamp);
+      }
+      return a.isFavourited ? 1 : -1;
     });
   }
 
@@ -83,7 +88,7 @@ class TweetsProvider extends ChangeNotifier {
     Tweet tweet = _tweets[null]![index];
     Tweet newTweet = await db.insertTweet({...comment, 'originalTweetId': tweet.id});
     await db.updateTweet(tweet.id, {'numComments': tweet.numComments + 1});
+    tweet.numComments += 1;
     add(newTweet);
-    notifyListeners();
   }
 }

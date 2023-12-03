@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:twitter_clone_extended/widgets/tweet_search.dart';
 import 'package:twitter_clone_extended/services/db_helper.dart';
 import 'package:twitter_clone_extended/screens/create_tweet.dart';
-import '../models/tweet.dart';
+import 'package:twitter_clone_extended/widgets/tweets_list.dart';
 import 'package:twitter_clone_extended/services/tweets_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:twitter_clone_extended/widgets/tweet.dart';
 
 class Feed extends StatefulWidget {
   final String title;
@@ -36,7 +36,8 @@ class FeedState extends State<Feed> {
               await db.insertTweet(tweetData).then((val) =>
                   Provider.of<TweetsProvider>(context, listen: false).add(val));
             },
-          )
+          ),
+          const TweetSearch()
         ]),
         body:
             Consumer<TweetsProvider>(builder: (context, tweetsProvider, child) {
@@ -52,7 +53,6 @@ class FeedState extends State<Feed> {
                       textScaleFactor: 1.5,
                     )));
           }
-          List<Tweet> tweets = tweetsProvider.tweets[null]!;
           return RefreshIndicator(
               onRefresh: () async {
                 await tweetsProvider.refresh();
@@ -60,18 +60,7 @@ class FeedState extends State<Feed> {
               notificationPredicate: (ScrollNotification notification) {
                 return notification.depth == 0;
               },
-              child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  padding: const EdgeInsets.only(right: 40),
-                  itemCount: tweets.length,
-                  itemBuilder: (BuildContext context, int index) => TweetWidget(
-                      tweet: tweets[index],
-                      index: index,
-                      replies: tweetsProvider.tweets
-                              .containsKey(tweets[index].originalTweetId)
-                          ? tweetsProvider
-                              .tweets[tweets[index].originalTweetId]!
-                          : [])));
+              child: TweetsList(tweetsProvider.tweets));
         }));
   }
 }

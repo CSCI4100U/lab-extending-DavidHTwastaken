@@ -13,7 +13,7 @@ If you wish to extend this lab, you will need to add features including interact
 
 - (done) Clicking the button next to the time string should provide a small popup that asks the user if they wish to hide the tweet. If they do so, the tweet should disappear from the feed.
 
-- (2 mark) Clicking the speech bubble should provide the opportunity to reply to a tweet. This should take the user to a new page where they can write a new tweet. If a tweet is submitted, it should appear in the feed directly below the original tweet, and increase the number of comments by 1.
+- (done) Clicking the speech bubble should provide the opportunity to reply to a tweet. This should take the user to a new page where they can write a new tweet. If a tweet is submitted, it should appear in the feed directly below the original tweet, and increase the number of comments by 1.
 
 - (done) Clicking the bookmark button should set the tweet to be a favorited tweet. Favorited tweets will always appear at the top of the feed, with any replies directly below them. Clicking the bookmark button a second time should cause the tweet to no longer be favorited.
 

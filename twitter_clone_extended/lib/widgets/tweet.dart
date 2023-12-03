@@ -4,6 +4,7 @@ import 'package:twitter_clone_extended/models/tweet.dart';
 import 'package:twitter_clone_extended/services/tweets_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_extended/screens/create_tweet.dart';
+import 'package:twitter_clone_extended/widgets/replies.dart';
 
 class TweetWidget extends StatelessWidget {
   final Tweet tweet;
@@ -162,9 +163,10 @@ class TweetWidget extends StatelessWidget {
                         onPressed: () =>
                             Provider.of<TweetsProvider>(context, listen: false)
                                 .favourite(index),
-                      )
+                      ),
                     ],
                   ),
+                  RepliesWidget(replies)
                 ],
               ),
             )
