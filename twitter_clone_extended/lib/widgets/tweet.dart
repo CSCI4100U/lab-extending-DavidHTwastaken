@@ -2,17 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:twitter_clone_extended/utilities/convert_post_time.dart';
 import 'package:twitter_clone_extended/models/tweet.dart';
 import 'package:twitter_clone_extended/services/tweets_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter_clone_extended/screens/create_tweet.dart';
 
 class TweetWidget extends StatelessWidget {
   final Tweet tweet;
-
+  final int index;
+  final List<Tweet> replies;
   const TweetWidget({
     super.key,
-    required this.tweet
+    required this.tweet,
+    required this.index,
+    required this.replies
   });
 
   @override
   Widget build(BuildContext context) {
+    if (tweet.isHidden) {
+      return Container();
+    }
     return Padding(
         padding: const EdgeInsetsDirectional.only(top: 15, bottom: 15),
         child: Row(
@@ -28,8 +36,9 @@ class TweetWidget extends StatelessWidget {
                         backgroundColor: Colors.green,
                       )
                     ])),
-            Expanded(
+            Flexible(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // User Name and Time
@@ -48,30 +57,112 @@ class TweetWidget extends StatelessWidget {
                         convertPostTime(tweet.timeStamp, DateTime.now()),
                         style: const TextStyle(color: Colors.grey),
                       ),
-                      const Icon(Icons.expand_more)
+                      MenuAnchor(
+                          builder: (context, controller, child) {
+                            return IconButton(
+                                onPressed: () {
+                                  if (controller.isOpen) {
+                                    controller.close();
+                                  } else {
+                                    controller.open();
+                                  }
+                                },
+                                icon: const Icon(Icons.expand_more));
+                          },
+                          menuChildren: <MenuItemButton>[
+                            MenuItemButton(
+                                onPressed: () => Provider.of<TweetsProvider>(
+                                    context,
+                                    listen: false)
+                                    .hide(index),
+                                child: const Text('Hide Tweet'))
+                          ])
                     ],
                   ),
                   // Tweet Description
                   Text(tweet.description),
                   // Tweet Image
-                  tweet.imageURL != null ? Image.network(tweet.imageURL!, scale: 0.5) : Container(),
+                  (() {
+                    if (tweet.imageURL != null) {
+                      return Image.network(
+                        tweet.imageURL!,
+                        scale: 0.5,
+                        errorBuilder: (context, exception, stacktrace) {
+                          return Center(
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: 160,
+                                  color: Colors.grey,
+                                  child: const Text("Invalid image URL")));
+                        },
+                      );
+                    }
+                    return Container();
+                  })(),
                   // Tweet Statistics (Comments, Retweets, Likes)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(children: [
-                        const Icon(Icons.comment),
+                        MenuAnchor(
+                            builder: (context, controller, child) {
+                              return IconButton(
+                                  onPressed: () {
+                                    if (controller.isOpen) {
+                                      controller.close();
+                                    } else {
+                                      controller.open();
+                                    }
+                                  },
+                                  icon: const Icon(Icons.chat_bubble_outline));
+                            },
+                            menuChildren: <MenuItemButton>[
+                              MenuItemButton(
+                                  onPressed: () async {
+                                    await Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                        const CreateTweet()))
+                                        .then((comment) {
+                                      Provider.of<TweetsProvider>(context,
+                                          listen: false)
+                                          .addComment(comment, index);
+                                    });
+                                  },
+                                  child: const Text('Reply'))
+                            ]),
                         Text('${tweet.numComments}')
                       ]),
                       Row(children: [
-                        const Icon(Icons.repeat_sharp),
+                        IconButton(
+                          icon: Icon(tweet.isRetweeted
+                              ? Icons.repeat_on_sharp
+                              : Icons.repeat),
+                          onPressed: () => Provider.of<TweetsProvider>(context,
+                              listen: false)
+                              .retweet(index),
+                        ),
                         Text('${tweet.numRetweets}')
                       ]),
                       Row(children: [
-                        Icon(tweet.isLiked ? Icons.favorite : Icons.favorite_border),
+                        IconButton(
+                            icon: Icon(tweet.isLiked
+                                ? Icons.favorite
+                                : Icons.favorite_border),
+                            onPressed: () => Provider.of<TweetsProvider>(
+                                context,
+                                listen: false)
+                                .like(index)),
                         Text('${tweet.numLikes}')
                       ]),
-                      const Icon(Icons.bookmark)
+                      IconButton(
+                        icon: Icon(tweet.isFavourited
+                            ? Icons.bookmark
+                            : Icons.bookmark_border),
+                        onPressed: () =>
+                            Provider.of<TweetsProvider>(context, listen: false)
+                                .favourite(index),
+                      )
                     ],
                   ),
                 ],

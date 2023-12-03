@@ -13,6 +13,8 @@ class Tweet {
   bool isLiked;
   bool isRetweeted;
   bool isFavourited;
+  bool isHidden;
+  int? originalTweetId;
 
   // Constructor
   Tweet({
@@ -27,6 +29,8 @@ class Tweet {
     required this.isLiked,
     required this.isRetweeted,
     required this.isFavourited,
+    required this.isHidden,
+    this.originalTweetId,
     this.imageURL,
   });
 
@@ -44,7 +48,9 @@ class Tweet {
       'numLikes': numLikes,
       'isLiked': isLiked,
       'isRetweeted': isRetweeted,
-      'isFavorited': isFavourited
+      'isFavorited': isFavourited,
+      'originalTweetId': originalTweetId,
+      'isHidden': isHidden
     };
   }
 
@@ -61,5 +67,7 @@ class Tweet {
         numLikes = map['numLikes'],
         isLiked = map['isLiked'],
         isRetweeted = map['isRetweeted'],
-        isFavourited = map['isFavourited'];
+        isFavourited = map['isFavourited'],
+        originalTweetId = map['originalTweetId'],
+  isHidden = map['isHidden'];
 }

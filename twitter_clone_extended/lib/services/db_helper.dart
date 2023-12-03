@@ -12,7 +12,9 @@ class DatabaseHelper {
   static const isLiked = 'isLiked';
   static const isRetweeted = 'isRetweeted';
   static const isFavourited = 'isFavourited';
-  
+  static const originalTweetId = 'originalTweetId';
+  static const isHidden = 'isHidden';
+
   late Database db;
   final String tableName = 'tweets';
   final defaults = {
@@ -22,9 +24,10 @@ class DatabaseHelper {
     numRetweets: 0,
     isLiked: false,
     isRetweeted: false,
-    isFavourited: false
+    isFavourited: false,
+    isHidden: false
   };
-  final bools = [isLiked,isRetweeted,isFavourited];
+  final bools = [isLiked, isRetweeted, isFavourited];
 
   static final DatabaseHelper _instance = DatabaseHelper._();
   DatabaseHelper._();
@@ -46,30 +49,42 @@ class DatabaseHelper {
       originalTweetId INTEGER,
       isLiked BOOLEAN NOT NULL,
       isRetweeted BOOLEAN NOT NULL,
-      isFavourited BOOLEAN NOT NULL     
+      isFavourited BOOLEAN NOT NULL,
+      isHidden BOOLEAN NOT NULL  
     )
     ''';
     db = await openDatabase(join(await getDatabasesPath(), 'tweets.db'),
         version: 1, onCreate: (database, version) => database.execute(sql));
   }
 
-  Future<List<Tweet>> getTweets() async {
+  Future<Map<int?, List<Tweet>>> getTweets() async {
     await _init();
-    return await db.query(tableName, orderBy: timeStamp).then((list) => list
-        .map((e) => Tweet.fromMap({
-              ...e,
-              isLiked: intToBool(e[isLiked] as int),
-              isRetweeted: intToBool(e[isRetweeted] as int),
-              isFavourited: intToBool(e[isFavourited] as int)
-            }))
-        .toList());
+    List<Tweet> tweets = await db
+        .query(tableName, orderBy: '$originalTweetId ASC,$timeStamp DESC')
+        .then((list) => list
+            .map((e) => Tweet.fromMap({
+                  ...e,
+                  isLiked: intToBool(e[isLiked] as int),
+                  isRetweeted: intToBool(e[isRetweeted] as int),
+                  isFavourited: intToBool(e[isFavourited] as int),
+                  isHidden: intToBool(e[isHidden] as int)
+                }))
+            .toList());
+    Map<int?, List<Tweet>> map = {};
+    for (Tweet tweet in tweets) {
+      if (map.containsKey(tweet.originalTweetId)) {
+        map[tweet.originalTweetId]!.add(tweet);
+        continue;
+      }
+      map[tweet.originalTweetId] = <Tweet>[tweet];
+    }
+    return map;
   }
 
   Future<Tweet> insertTweet(Map<String, dynamic> tweet) async {
     await _init();
-    Map<String,dynamic> data = {...defaults, ...tweet};
-    int id = await db
-        .insert(tableName, convertMapBoolsToInt(data));
+    Map<String, dynamic> data = {...defaults, ...tweet};
+    int id = await db.insert(tableName, convertMapBoolsToInt(data));
     return Tweet.fromMap({...data, DatabaseHelper.id: id});
   }
 
