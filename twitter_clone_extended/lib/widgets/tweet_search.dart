@@ -10,7 +10,7 @@ class TweetSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TweetsProvider>(builder: (context, tweetsProvider,child){
+    return Consumer<TweetsProvider>(builder: (context, tweetsProvider, child) {
       Map<int?, List<Tweet>> tweetsMap = tweetsProvider.tweets;
       return SearchAnchor(
           builder: (BuildContext context, SearchController controller) {
@@ -25,13 +25,16 @@ class TweetSearch extends StatelessWidget {
         tweetsMap[null] =
             fuzzySearch(controller.text, tweetsProvider.tweets[null]!);
         List<Tweet> tweets = tweetsMap[null]!;
-        return List<TweetWidget>.generate(tweetsMap[null]!.length, (index) {
-          return TweetWidget(
-              tweet: tweets[index],
-              index: index,
-              replies: tweetsMap.containsKey(tweets[index].id)
-                  ? tweetsMap[tweets[index].id]!
-                  : []);
+        return List<Consumer<TweetsProvider>>.generate(tweetsMap[null]!.length,
+            (index) {
+          return Consumer<TweetsProvider>(builder: (context, provider, child) {
+            return TweetWidget(
+                tweet: tweets[index],
+                index: index,
+                replies: tweetsMap.containsKey(tweets[index].id)
+                    ? tweetsMap[tweets[index].id]!
+                    : []);
+          });
         });
       });
     });
