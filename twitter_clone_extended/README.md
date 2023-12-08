@@ -2,7 +2,7 @@
 
 Extended version of lab 3-4 for Mobile Devices 4100U.
 
-The extra feature I have chosed to implement is a search function.
+The extra feature I have chosen to implement is a search function.
 Entering search terms in the bar will filter the list
 of tweets. Tweets within the search suggestions
 can be still be interacted with.
